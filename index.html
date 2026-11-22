@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bangla Cartoon Maker</title>
+<style>
+body {
+background:#151525;
+color:white;
+font-family:sans-serif;
+text-align:center;
+padding:20px;
+}
+h1 {color:#ffca55;}
+textarea {
+width:95%;
+height:110px;
+padding:10px;
+font-size:18px;
+border-radius:10px;
+}
+button {
+padding:13px;
+margin:8px;
+border:0;
+border-radius:9px;
+background:#ffca55;
+font-size:16px;
+}
+canvas {
+width:100%;
+max-width:500px;
+background:#9ee7ff;
+border-radius:15px;
+}
+</style>
+</head>
+<body>
+<h1>বাংলা কার্টুন মেকার</h1>
+<p>তোমার গল্প এখানে লেখো</p>
+<textarea id="story" placeholder="একদিন একটি ছোট ছেলে বনে গেল..."></textarea>
+<br>
+<button onclick="speak()">বাংলায় শুনুন</button>
+<button onclick="start()">কার্টুন চালু করুন</button>
+<button onclick="stop()">থামান</button>
+<br><br>
+<canvas id="c" width="600" height="400"></canvas>
+<script>
+const c=document.getElementById('c');
+const x=c.getContext('2d');
+let frame=0,timer=null;
+
+function draw(){
+x.clearRect(0,0,600,400);
+x.fillStyle='#87dafa';
+x.fillRect(0,0,600,400);
+x.fillStyle='#51ad55';
+x.fillRect(0,300,600,100);
+x.fillStyle='#ffdf58';
+x.beginPath();
+x.arc(500,70,40,0,7);
+x.fill();
+
+let move=Math.sin(frame/15)*25;
+x.fillStyle='#f5c18b';
+x.beginPath();
+x.arc(300+move,190,48,0,7);
+x.fill();
+
+x.fillStyle='#222';
+x.fillRect(270+move,250,60,65);
+x.fillStyle='black';
+x.beginPath();
+x.arc(285+move,185,5,0,7);
+x.fill();
+x.beginPath();
+x.arc(315+move,185,5,0,7);
+x.fill();
+
+x.fillStyle='white';
+x.font='bold 23px sans-serif';
+x.fillText('বাংলা কার্টুন গল্প',175,40);
+
+x.fillStyle='black';
+x.font='20px sans-serif';
+x.fillText(document.getElementById('story').value.slice(0,35),20,360);
+frame++;
+}
+
+function start(){
+if(timer)return;
+timer=setInterval(draw,50);
+}
+
+function speak(){
+let u=new SpeechSynthesisUtterance(
+document.getElementById('story').value
+);
+u.lang='bn-BD';
+speechSynthesis.speak(u);
+}
+
+function stop(){
+clearInterval(timer);
+timer=null;
+}
+draw();
+</script>
+</body>
+</html>
